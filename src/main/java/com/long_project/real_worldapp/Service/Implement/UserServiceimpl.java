@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.long_project.real_worldapp.Entity.User;
 import com.long_project.real_worldapp.Model.user.DTO.userDTOResponse;
+import com.long_project.real_worldapp.Model.user.DTO.userDTOcreate;
 import com.long_project.real_worldapp.Model.user.DTO.userDTOloginRequest;
 import com.long_project.real_worldapp.Model.user.Mapper.UserMapper;
 import com.long_project.real_worldapp.Repository.UserRepository;
@@ -37,13 +38,25 @@ public class UserServiceimpl implements UserService {
         if(!isAuthen){
             System.out.println("User name and password incorrect");
         }
+        return buildDTOResponse(userOptional.get());
+        
+    }
 
+    @Override
+    public Map<String, userDTOResponse> creatUser(Map<String, userDTOcreate> userMap) {
+        userDTOcreate userDTOcreate = userMap.get("user");
+        User user = UserMapper.toUser(userDTOcreate);
+        user = userRepository.save(user);
+        return buildDTOResponse(user);
+    }
+
+    private Map<String, userDTOResponse> buildDTOResponse(User user){
         Map<String, userDTOResponse> wrapper = new HashMap<>();
-        userDTOResponse userDTORe = UserMapper.toUserDTOResponse(userOptional.get());
-        userDTORe.setToken(jwtTokenUtil.generateToken(userOptional.get(), 24*60*60));
+        userDTOResponse userDTORe = UserMapper.toUserDTOResponse(user);
+        userDTORe.setToken(jwtTokenUtil.generateToken(user, 24*60*60));
         wrapper.put("user", userDTORe);
         return wrapper;
         
-    }
+    } 
     
 }

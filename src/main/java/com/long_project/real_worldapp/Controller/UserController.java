@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.long_project.real_worldapp.Model.user.DTO.userDTOResponse;
+import com.long_project.real_worldapp.Model.user.DTO.userDTOcreate;
 import com.long_project.real_worldapp.Model.user.DTO.userDTOloginRequest;
 import com.long_project.real_worldapp.Service.UserService;
 
@@ -24,6 +25,11 @@ public class UserController {
     @PostMapping(value = "/users/login")
     public Map<String, userDTOResponse> login(@RequestBody Map<String, userDTOloginRequest> userMap){
         return userService.authenticate(userMap);
+    }
+
+    @PostMapping(value = "/users")
+    public Map<String, userDTOResponse> creatUser(@RequestBody Map<String, userDTOcreate> userMap){
+        return userService.creatUser(userMap);
     }
     
 }
